@@ -1,0 +1,110 @@
+---
+- name: UPDATE ALL SERVERS
+  hosts: all
+  become: true
+  tasks:
+    - name: UPDATE
+      ansible.builtin.apt:
+        update_cache: yes
+
+- name: WEBSERVERS | Deploy
+  hosts: webservers
+  gather_facts: false
+  become: true
+  handlers:
+    - name: nginx_reload
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
+  tasks:
+    - name: NGINX | Install
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+    - name: NGINX | Copy start page web1
+      template:
+        src: ./templates/nginx1.j2
+        dest: /var/www/html/index.html
+        mode: "0644"
+      notify: nginx_reload
+    
+- name: WEB_SERVER_2 | CONF
+  hosts: web-02
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Copy start page web2
+      template:
+        src: ./templates/nginx2.j2
+        dest: /var/www/html/index.html
+        mode: "0644"
+    - name: NGINX | Start
+      systemd: name=nginx state=restarted enabled=yes
+
+- name: HAProxy | Deploy  
+  hosts: loadbalancer
+  gather_facts: false
+  become: yes
+  handlers:
+    - name: Haproxy_restart
+      ansible.builtin.service:
+        name: haproxy
+        state: restarted
+  tasks:
+    - name: HAProxy | Install
+      ansible.builtin.apt:
+        name: haproxy
+        state: present
+    - name: HAProxy | Copy *.conf on haproxy-01
+      template:
+        src: ./templates/haproxy1.j2
+        dest: /etc/haproxy/haproxy.cfg
+        mode: "0644"
+      notify: Haproxy_restart
+
+- name: HAProxy | CONF_2
+  hosts: haproxy-02
+  gather_facts: false
+  become: true
+  tasks:
+    - name: HAProxy | Copy *.conf on haproxy-02
+      template:
+        src: ./templates/haproxy2.j2
+        dest: /etc/haproxy/haproxy.cfg
+        mode: "0644"
+    - name: NGINX | Start
+      systemd: name=haproxy state=restarted enabled=yes
+
+- name: KEEPALIVED | Deploy
+  hosts: loadbalancer
+  become: true
+  gather_facts: false
+  handlers:
+    - name: keepalived_restart
+      ansible.builtin.service:
+        name: keepalived
+        state: restarted
+  tasks:
+    - name: KEEPALIVED | Install
+      ansible.builtin.apt:
+        name: keepalived
+        state: present
+    - name: KEEPALIVED | Copy conf file
+      template:
+        src: ./templates/keep1.j2
+        dest: /etc/keepalived/keepalived.conf
+        mode: "0644"
+      notify: keepalived_restart
+
+- name: KEEPALIVED_2 | Copy conf 
+  hosts: haproxy-02
+  gather_facts: false
+  become: true
+  tasks:
+    - name: KEEPALIVED | Copy conf file (2)
+      template:
+        src: ./templates/keep2.j2
+        dest: /etc/keepalived/keepalived.conf
+        mode: "0644"
+    - name: Start keepalived
+      systemd: name=keepalived state=restarted enabled=yes
