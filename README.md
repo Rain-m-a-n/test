@@ -29,15 +29,13 @@ ___
 ___
 ##### **Результат:**
 * Docker контейнеры и адреса:  
-  ![result](https://github.com/Rain-m-a-n/test/pics/dock1.jpg)   
+  ![result](https://github.com/Rain-m-a-n/test/blob/master/picsdock1.jpg)   
 * Запрос в браузере:  
-  ![result](https://github.com/Rain-m-a-n/test/pics/dock2.jpg)  
+  ![result](https://github.com/Rain-m-a-n/test/blob/master/picsdock2.jpg)  
 * Обновление страницы:  
-  ![result](https://github.com/Rain-m-a-n/test/pics/dock3.jpg)  
+  ![result](https://github.com/Rain-m-a-n/test/blob/master/picsdock3.jpg)  
 * Статистика HAProxy:  
-  ![result](https://github.com/Rain-m-a-n/test/pics/dock4.jpg)  
-
-
+  ![result](https://github.com/Rain-m-a-n/test/blob/master/picsdock4.jpg)  
 
 
 ### Задание 2.2 (усложненное)
@@ -51,23 +49,18 @@ ___
 
 Плейбук пожно посмотреть перейдя по ссылке [playbook](https://github.com/Rain-m-a-n/test/nginx_haproxy.yml)
 * Краткое описание шагов:   
-![result](https://github.com/Rain-m-a-n/test/pics/play.jpg)  
+![result](https://github.com/Rain-m-a-n/test/blob/master/picsplay.jpg)  
 * Результат выполенния <u>playbook:</u>
-![result](https://github.com/Rain-m-a-n/test/pics/play_res.jpg)  
+![result](https://github.com/Rain-m-a-n/test/blob/master/picsplay_res.jpg)  
 * Проверка работоспособности:
   * Открываем адрес заданный в настройках keepalived:
-  ![result](https://github.com/Rain-m-a-n/test/pics/1.jpg)  
+  ![result](https://github.com/Rain-m-a-n/test/blob/master/pics1.jpg)  
   * Обновляем страницу:
-  ![result](https://github.com/Rain-m-a-n/test/pics/2.jpg)
+  ![result](https://github.com/Rain-m-a-n/test/blob/master/pics2.jpg)
   * Также открываем страницу статистики:
-  ![result](https://github.com/Rain-m-a-n/test/pics/3.jpg)  
+  ![result](https://github.com/Rain-m-a-n/test/blob/master/pics3.jpg)  
 
 * **Отказоустойчивость**:
   * Система продолжит работать, если отключится сервер **haproxy-02** (так как он выполняет роль дублирующего).
   * Система продолжит работать, если отключится один из web серверов. 
   * Система ${\color{red}перестанет}$ ${\color{red}работать}$, если отключится сервер **haproxy-01** т.к. он выполняет роль мастера. Этот момент можно исправить в конфигурационном файле **keepalived.conf**. Но к сожалению не хватило времени для донастройки. 
-  
-  
-  
-  
-
